@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لسوميا — قصيدة حبي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a5f28;
+    --deep: #04080f;
+    --midnight: #080d18;
+    --navy: #0d1528;
+    --crimson: #7a1a2e;
+    --rose: #c0415a;
+    --rose-light: #e8758a;
+    --sand: #d4b896;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--sand);
+    font-family: 'Amiri', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── CANVAS STARS ── */
+  #starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── PARTICLES ── */
+  .petals-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    bottom: -20px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--rose-light), transparent);
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-105vh) translateX(var(--drift)) scale(1.5); opacity: 0; }
+  }
+
+  /* ── CONTENT WRAPPER ── */
+  .page { position: relative; z-index: 2; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+  }
+
+  .moon {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 40%, #fffbe0 0%, #f0d080 40%, #c9a84c 70%, transparent 100%);
+    box-shadow:
+      0 0 40px 20px rgba(201,168,76,0.25),
+      0 0 100px 40px rgba(201,168,76,0.12),
+      0 0 200px 60px rgba(201,168,76,0.06);
+    margin-bottom: 3rem;
+    animation: moonPulse 6s ease-in-out infinite, moonRise 2.5s cubic-bezier(.2,0,.3,1) both;
+    position: relative;
+  }
+  .moon::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.3) 0%, transparent 60%);
+  }
+  @keyframes moonPulse {
+    0%, 100% { box-shadow: 0 0 40px 20px rgba(201,168,76,0.25), 0 0 100px 40px rgba(201,168,76,0.12); }
+    50%       { box-shadow: 0 0 60px 30px rgba(201,168,76,0.35), 0 0 140px 60px rgba(201,168,76,0.18); }
+  }
+  @keyframes moonRise {
+    from { opacity: 0; transform: translateY(60px) scale(0.7); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .name-wrap {
+    animation: fadeSlideUp 1.8s 0.6s cubic-bezier(.2,0,.3,1) both;
+  }
+  .her-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    color: var(--gold-light);
+    letter-spacing: 0.12em;
+    text-shadow:
+      0 0 40px rgba(240,208,128,0.5),
+      0 0 80px rgba(201,168,76,0.25);
+    line-height: 1;
+    margin-bottom: 0.3em;
+  }
+  .subtitle-ar {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    color: var(--rose-light);
+    font-style: italic;
+    letter-spacing: 0.06em;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+  }
+  .subtitle-fr {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+    color: var(--sand);
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-style: italic;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gold);
+    opacity: 0.5;
+    animation: bounce 2.5s ease-in-out infinite;
+    font-size: 1.5rem;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(10px); }
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DIVIDER ── */
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    opacity: 0.4;
+    font-size: 1.5rem;
+    letter-spacing: 0.8em;
+    margin: 0.5rem 0;
+  }
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+    margin: 0 auto;
+    width: 70%;
+    opacity: 0.5;
+  }
+
+  /* ── LOVE LETTER SECTION ── */
+  .section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--rose);
+    text-align: center;
+    margin-bottom: 0.8rem;
+    opacity: 0.8;
+  }
+
+  .love-letter {
+    background: linear-gradient(135deg, rgba(122,26,46,0.08), rgba(13,21,40,0.5));
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 2px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .love-letter::before {
+    content: '❧';
+    position: absolute;
+    top: 1.2rem; left: 1.5rem;
+    color: var(--gold);
+    opacity: 0.2;
+    font-size: 2rem;
+  }
+  .love-letter::after {
+    content: '❧';
+    position: absolute;
+    bottom: 1.2rem; right: 1.5rem;
+    color: var(--gold);
+    opacity: 0.2;
+    font-size: 2rem;
+    transform: scaleX(-1);
+  }
+
+  .letter-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+    line-height: 2;
+    color: var(--sand);
+    font-style: italic;
+    direction: ltr;
+    text-align: center;
+  }
+  .letter-text strong {
+    color: var(--gold-light);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  /* ── POEM CARDS ── */
+  .poems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .poem-card {
+    background: linear-gradient(160deg, rgba(8,13,24,0.95), rgba(4,8,15,0.98));
+    border: 1px solid rgba(201,168,76,0.18);
+    border-top: 2px solid var(--gold-dim);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    position: relative;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: default;
+  }
+  .poem-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(201,168,76,0.1), 0 0 0 1px rgba(201,168,76,0.3);
+  }
+  .poem-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.05), transparent 70%);
+    pointer-events: none;
+  }
+
+  .poet-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    margin-bottom: 1.2rem;
+    opacity: 0.8;
+  }
+  .verse-ar {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    line-height: 2.2;
+    color: var(--gold-light);
+    direction: rtl;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 30px rgba(240,208,128,0.2);
+  }
+  .verse-translation {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.9rem, 2vw, 1.05rem);
+    font-style: italic;
+    color: var(--sand);
+    opacity: 0.7;
+    line-height: 1.9;
+    direction: ltr;
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding-top: 1rem;
+  }
+
+  /* ── DEDICATION ── */
+  .dedication {
+    text-align: center;
+    padding: 5rem 2rem 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .dedication-hearts {
+    font-size: 2rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    display: inline-block;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 12px rgba(192,65,90,0.7));
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%  { transform: scale(1.2); }
+    28%  { transform: scale(1); }
+    42%  { transform: scale(1.15); }
+    56%  { transform: scale(1); }
+  }
+  .dedication-text {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    line-height: 2.2;
+    color: var(--rose-light);
+    direction: rtl;
+    text-align: center;
+  }
+  .dedication-text span {
+    color: var(--gold-light);
+  }
+
+  .closing {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(0.8rem, 2.2vw, 1.1rem);
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    text-align: center;
+    opacity: 0.7;
+    margin: 3rem auto 1rem;
+    direction: ltr;
+  }
+
+  /* ── DUNES ── */
+  .dunes {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 4rem;
+  }
+  .dunes svg { display: block; width: 100%; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    opacity: 0.3;
+    letter-spacing: 0.2em;
+    direction: ltr;
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<canvas id="starfield"></canvas>
+
+<!-- Floating petals / particles -->
+<div class="petals-wrap" id="petals"></div>
+
+<div class="page">
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="moon"></div>
+    <div class="name-wrap">
+      <div class="her-name">Soumia</div>
+      <div class="subtitle-ar">يا نجمةً في سماء روحي</div>
+      <div class="subtitle-fr">O star in the sky of my soul</div>
+    </div>
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <hr class="divider">
+  <div class="ornament">✦ ✦ ✦</div>
+  <hr class="divider">
+
+  <!-- ── LOVE LETTER ── -->
+  <section class="section reveal">
+    <div class="section-label">Une lettre du cœur · رسالة من القلب</div>
+    <div class="love-letter">
+      <p class="letter-text">
+        <strong>Soumia</strong> — your name itself is poetry.<br>
+        Like the ancient poets who set fire to the desert with their words,<br>
+        you have set fire to <strong>my world</strong> with your presence.<br><br>
+        You love the voices of the <em>Jahiliyya</em> — those wild, free hearts<br>
+        who wrote love into the sand and let the wind carry it.<br>
+        Tonight, I borrow their words<br>
+        because mine are not enough to hold you.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── POEMS ── -->
+  <section class="section">
+    <div class="section-label reveal">أشعار الجاهلية · Poetry of the Ancient Arabs</div>
+    <div class="poems-grid">
+
+      <div class="poem-card reveal">
+        <div class="poet-name">امرؤ القيس · Imru' al-Qays</div>
+        <div class="verse-ar">
+          قِفا نَبكِ مِن ذِكرى حَبيبٍ وَمَنزِلِ<br>
+          بِسِقطِ اللِوى بَينَ الدَخولِ فَحَومَلِ
+        </div>
+        <div class="verse-translation">
+          "Halt, friends — let us weep at the memory of a beloved<br>
+          and the traces of her dwelling, between the sands and the hills."
+        </div>
+      </div>
+
+      <div class="poem-card reveal">
+        <div class="poet-name">عنترة بن شداد · Antarah ibn Shaddad</div>
+        <div class="verse-ar">
+          يا دارَ عَبلَةَ بِالجِواءِ تَكَلَّمي<br>
+          وَعِمي صَباحاً دارَ عَبلَةَ وَاِسلَمي
+        </div>
+        <div class="verse-translation">
+          "O dwelling of Abla in al-Jiwaa, speak to me —<br>
+          good morning to you, dwelling of Abla, and be safe."
+        </div>
+      </div>
+
+      <div class="poem-card reveal">
+        <div class="poet-name">لبيد بن ربيعة · Labid ibn Rabi'a</div>
+        <div class="verse-ar">
+          أَلا كُلُّ شَيءٍ ما خَلا اللَهَ باطِلُ<br>
+          وَكُلُّ نَعيمٍ لا مَحالَةَ زائِلُ
+        </div>
+        <div class="verse-translation">
+          "Truly, all things besides God are vanity —<br>
+          and every delight shall, without doubt, pass away."
+        </div>
+      </div>
+
+      <div class="poem-card reveal">
+        <div class="poet-name">زهير بن أبي سلمى · Zuhayr ibn Abi Sulma</div>
+        <div class="verse-ar">
+          وَمَن يَكُ ذا فَضلٍ فَيَبخَل بِفَضلِهِ<br>
+          عَلى قَومِهِ يُستَغنَ عَنهُ وَيُذمَمِ
+        </div>
+        <div class="verse-translation">
+          "He who has abundance yet withholds it from his people<br>
+          shall be forsaken by them, and remembered in blame."
+        </div>
+      </div>
+
+      <div class="poem-card reveal">
+        <div class="poet-name">طرفة بن العبد · Tarafa ibn al-Abd</div>
+        <div class="verse-ar">
+          لَعَمرُكَ إِنَّ المَوتَ ما أَخطَأَ الفَتى<br>
+          لَكَالطِّوَلِ المُرخى وَثِنياهُ بِاليَدِ
+        </div>
+        <div class="verse-translation">
+          "By your life — death, when it does not miss the young man,<br>
+          is like a long rope whose two ends are in the hand."
+        </div>
+      </div>
+
+      <div class="poem-card reveal">
+        <div class="poet-name">النابغة الذبياني · Al-Nabigha al-Dhubyani</div>
+        <div class="verse-ar">
+          فَإِنَّكَ كَاللَيلِ الَّذي هُوَ مُدرِكي<br>
+          وَإِن خِلتُ أَنَّ المُنتَأى عَنكَ واسِعُ
+        </div>
+        <div class="verse-translation">
+          "For you are like the night that will find me<br>
+          even if I believed the distance from you was vast."
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+  <div class="ornament">♥ ♥ ♥</div>
+  <hr class="divider">
+
+  <!-- ── DEDICATION ── -->
+  <div class="dedication reveal">
+    <div class="dedication-hearts">♥</div>
+    <p class="dedication-text">
+      يا <span>سوميا</span>،<br>
+      أنتِ مَن علَّمتني أنَّ الحبَّ<br>
+      ليس كلامًا يُقال —<br>
+      بل هو <span>شعرٌ يُعاش</span>.<br><br>
+      كما عشقَ عنترةُ عبلةَ في البيداء،<br>
+      أنا أعشقُكِ في كلِّ لحظة.
+    </p>
+    <br>
+    <p class="letter-text" style="direction:ltr; font-size:1.05rem; opacity:0.75; margin-top:1.5rem;">
+      O Soumia — you taught me that love is not words spoken,<br>
+      but <em>poetry lived</em>. As Antarah loved Abla across the desert,<br>
+      I love you across every moment.
+    </p>
+  </div>
+
+  <p class="closing reveal">With all my heart · بكلِّ قلبي · Pour toujours</p>
+
+  <!-- ── DUNES ── -->
+  <div class="dunes">
+    <svg viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="duneGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a0f05" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#080410" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 220 L0 160 Q100 80 220 130 Q340 180 480 100 Q580 50 700 120 Q820 190 940 90 Q1060 20 1200 110 L1200 220 Z" fill="url(#duneGrad)"/>
+      <path d="M0 220 L0 185 Q150 130 300 165 Q450 200 600 145 Q750 90 900 160 Q1050 220 1200 170 L1200 220 Z" fill="#04080f" opacity="0.8"/>
+    </svg>
+  </div>
+
+  <footer>✦ Made with love, for Soumia ✦ مصنوعٌ بالحبّ، لسوميا ✦</footer>
+
+</div><!-- .page -->
+
+<script>
+// ── STAR FIELD ──
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function mkStar() {
+  return {
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.4 + 0.2,
+    a: Math.random(),
+    da: (Math.random() - 0.5) * 0.006 + 0.003,
+    speed: Math.random() * 0.04,
+    phase: Math.random() * Math.PI * 2,
+    gold: Math.random() < 0.08
+  };
+}
+
+function initStars() {
+  resize();
+  stars = Array.from({ length: 280 }, mkStar);
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, W, H);
+  for (const s of stars) {
+    s.phase += s.da;
+    const alpha = 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y + Math.sin(s.phase * 0.3) * 1.5, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.gold
+      ? `rgba(240,208,128,${alpha * 0.9})`
+      : `rgba(220,230,255,${alpha})`;
+    ctx.fill();
+  }
+}
+
+let raf;
+function loop(t) {
+  drawStars(t);
+  raf = requestAnimationFrame(loop);
+}
+
+initStars();
+loop(0);
+window.addEventListener('resize', () => { resize(); initStars(); });
+
+// ── FLOATING PETALS ──
+const petalsWrap = document.getElementById('petals');
+const PETAL_COUNT = 35;
+for (let i = 0; i < PETAL_COUNT; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  const left = Math.random() * 100;
+  const dur  = 8 + Math.random() * 14;
+  const delay = Math.random() * 18;
+  const drift = (Math.random() - 0.5) * 120;
+  const size  = 3 + Math.random() * 6;
+  const hue   = Math.random() < 0.5 ? 'rgba(220,80,120,' : 'rgba(201,168,76,';
+  p.style.cssText = `
+    left: ${left}%;
+    width: ${size}px; height: ${size}px;
+    animation-duration: ${dur}s;
+    animation-delay: ${delay}s;
+    --drift: ${drift}px;
+    background: radial-gradient(circle, ${hue}0.9), transparent);
+  `;
+  petalsWrap.appendChild(p);
+}
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), 80);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
